@@ -6,6 +6,7 @@ public class Spawner : MonoBehaviour
 {
     public Transform[] spawnPoints;
     public GameObject pumpkin;
+    private int prevSpawn;
 
     // Start is called before the first frame update
     void Start()
@@ -16,8 +17,16 @@ public class Spawner : MonoBehaviour
     IEnumerator startSpawning()
     {
         yield return new WaitForSeconds(Random.Range(1f, 3.5f));
-        Instantiate(pumpkin, spawnPoints[Random.Range(0, spawnPoints.Length)].position,
+        int spawnPoint = Random.Range(0, spawnPoints.Length);
+        while (spawnPoint == prevSpawn)
+        {
+            spawnPoint = Random.Range(0, spawnPoints.Length);
+        }
+
+        Instantiate(pumpkin, spawnPoints[spawnPoint].position,
             Quaternion.identity);
+
+        prevSpawn = spawnPoint;
 
         StartCoroutine(startSpawning());
     }
